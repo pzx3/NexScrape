@@ -1,0 +1,46 @@
+# Build artifacts
+/target/
+**/target/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*.egg
+dist/
+build/
+*.whl
+.venv/
+venv/
+
+# Rust
+Cargo.lock
+*.pdb
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment
+.env
+.env.local
+
+# OS
+Thumbs.db
+desktop.ini
+
+# Test output
+*.jsonl
+*.csv
+output/
+results/
+
+# Coverage
+*.lcov
+coverage/
+htmlcov/
