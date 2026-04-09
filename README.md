@@ -135,6 +135,45 @@ class QuotesSpider(nex.Spider):
 nex.run(QuotesSpider, output="quotes.json")
 ```
 
+### JavaScript Browser Runtime (TypeScript)
+
+For interacting with highly dynamic Single Page Applications (SPAs) and executing JavaScript:
+
+```typescript
+import { BrowserRuntime } from "@nexscrape/browser";
+
+async function run() {
+  const browser = new BrowserRuntime({ headless: false });
+  const page = await browser.launch();
+
+  // Secretly catch backend JSON payloads
+  page.watch.setupInterceptor({
+    urlPattern: /api\/products/,
+    onResponse: async (res) => console.log(await res.json())
+  });
+
+  await page.visit("http://localhost:3000", "domcontentloaded");
+  
+  // Interact & Smart Waits
+  await page.interact.click("#load-more-btn");
+  await page.wait.networkIdle(500);
+
+  // Send fast DOM snapshot back to Rust Core
+  const html = await page.getDomSnapshot();
+  await browser.close();
+}
+run();
+```
+
+### Visual Selector Overlay (NexPicker)
+
+Use the CLI to launch our built-in visual element picker to dynamically generate stable scraping selectors:
+
+```bash
+nex pick "https://example.com"
+```
+
+
 ## 🖥️ CLI
 
 ```bash
@@ -282,7 +321,8 @@ pytest tests/
 
 - [x] **v0.1** — Core HTTP engine, HTML parser, CLI, basic export
 - [ ] **v0.5** — Anti-detection, proxy rotation, CAPTCHA integration
-- [ ] **v0.8** — Browser support (Chromium), JavaScript rendering
+- [x] **v0.8** — Browser support (Chromium), JavaScript rendering, Advanced JS DSL
+- [x] **v0.9** — NexPicker (Visual Selector Tool) & Schema Generation
 - [ ] **v1.0** — Distributed crawling, dashboard, ML schema detection
 
 ## 🤝 Contributing
