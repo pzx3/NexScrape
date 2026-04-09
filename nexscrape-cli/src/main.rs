@@ -65,6 +65,16 @@ enum Commands {
         format: String,
     },
 
+    /// Launch the NexPicker visual selector tool.
+    Pick {
+        /// URL to open in the picker.
+        url: String,
+
+        /// Output directory to save schemas.
+        #[arg(short, long)]
+        output_dir: Option<String>,
+    },
+
     /// Show information about NexScrape.
     Info,
 }
@@ -99,6 +109,9 @@ async fn main() -> anyhow::Result<()> {
             format,
         } => {
             cmd_extract(url, fields, output, format).await?;
+        }
+        Commands::Pick { url, output_dir } => {
+            cmd_pick(url, output_dir)?;
         }
         Commands::Info => {
             cmd_info();
@@ -243,8 +256,39 @@ fn cmd_info() {
     📊 Export to JSON, CSV, JSONL
     🛡️ Rate limiting & retry policies
     🧹 URL deduplication (Bloom filter)
+    👁️ NexPicker visual selector integration
 
   Repository: https://github.com/nexscrape/nexscrape
   License: MIT
 "#, env!("CARGO_PKG_VERSION"));
+}
+
+fn cmd_pick(url: String, output_dir: Option<String>) -> anyhow::Result<()> {
+    eprintln!("🕷️  Launching NexPicker...");
+    
+    let mut cmd = std::process::Command::new("node");
+    
+    let exe_dir = std::env::current_exe()?.parent().unwrap().to_path_buf();
+    let local_picker = exe_dir.join("../../nexscrape-picker/dist/cli.js");
+    let dev_picker = std::path::Path::new("nexscrape-picker/dist/cli.js");
+
+    let picker_script = if dev_picker.exists() {
+        dev_picker.to_path_buf()
+    } else if local_picker.exists() {
+        local_picker
+    } else {
+        anyhow::bail!("NexPicker script not found. Make sure @nexscrape/picker is built.");
+    };
+
+    cmd.arg(picker_script).arg(&url);
+
+    if let Some(dir) = output_dir {
+        cmd.arg("--output-dir").arg(dir);
+    }
+
+    let status = cmd.status()?;
+    if !status.success() {
+        anyhow::bail!("NexPicker exited with error code: {}", status);
+    }
+    Ok(())
 }

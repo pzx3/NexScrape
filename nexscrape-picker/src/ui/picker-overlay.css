@@ -1,0 +1,30 @@
+/* NexPicker Overlay CSS */
+
+#nex-highlight-box {
+    position: absolute;
+    pointer-events: none;
+    border: 2px solid #eb5e28;
+    background-color: rgba(235, 94, 40, 0.15);
+    z-index: 2147483647; /* Max z-index to ensure it is always on top */
+    transition: top 0.1s ease, left 0.1s ease, width 0.1s ease, height 0.1s ease, background-color 0.2s ease;
+    border-radius: 2px;
+    box-sizing: border-box;
+}
+
+#nex-tooltip {
+    position: absolute;
+    pointer-events: none;
+    background-color: #252422;
+    color: #fffcf2;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    z-index: 2147483647;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    white-space: nowrap;
+    opacity: 0.95;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Optional animating border or guides could be added here */
