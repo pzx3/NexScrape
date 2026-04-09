@@ -1,0 +1,25 @@
+{
+  "name": "@nexscrape/browser",
+  "version": "0.1.0",
+  "description": "NexScrape Browser Runtime System - Advanced JavaScript extraction and interactive scraping.",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "playwright": "^1.52.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.8.0",
+    "rimraf": "^6.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "license": "MIT"
+}
