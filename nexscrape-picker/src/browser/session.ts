@@ -46,6 +46,7 @@ export class BrowserSession {
     });
 
     this.context = await this.browser.newContext({
+      bypassCSP: true,
       viewport: this.options.config.viewport,
       userAgent: this.options.config.userAgent,
     });
@@ -56,10 +57,31 @@ export class BrowserSession {
       this.options.onPageClose();
     });
 
+    // Handle persistent injection on navigation
+    this.page.on("load", async () => {
+        try {
+            await this.injectOverlay();
+        } catch (e) {
+            console.error("Failed to re-inject overlay on navigation:", e);
+        }
+    });
+
+    // PREVENTION: Ensure all links open in the same tab
+    this.context.on("page", async (newPage) => {
+        if (newPage !== this.page && this.page) {
+            const url = newPage.url();
+            if (url !== "about:blank") {
+                console.log(`[Single-Tab Mode] Redirecting main page to: ${url}`);
+                await this.page.goto(url).catch(() => {});
+            }
+            await newPage.close().catch(() => {});
+        }
+    });
+
     return this.page;
   }
 
-  /** Navigates to the URL and injects the overlay scripts. */
+  /** Navigates to the URL. (Injection now happens automatically via 'load' event) */
   async navigateAndInject(): Promise<void> {
     if (!this.page) throw new Error("Browser not launched");
 
@@ -69,6 +91,11 @@ export class BrowserSession {
       waitUntil: this.options.config.waitStrategy,
       timeout: this.options.config.timeout,
     });
+  }
+
+  /** Core injection logic for JS and CSS */
+  private async injectOverlay(): Promise<void> {
+    if (!this.page) return;
 
     console.log(`Injecting NexPicker overlay...`);
 
@@ -81,19 +108,15 @@ export class BrowserSession {
     const cssPath = path.join(__dirname, "../../dist/overlay/picker-overlay.css");
     if (fs.existsSync(cssPath)) {
       await this.page.addStyleTag({ path: cssPath });
-    } else {
-        console.warn(`CSS not found at ${cssPath}`);
     }
 
     // Inject JS
     const jsPath = path.join(__dirname, "../../dist/overlay/picker-overlay.js");
     if (fs.existsSync(jsPath)) {
-        await this.page.addScriptTag({ path: jsPath });
-    } else {
-        console.warn(`JS not found at ${jsPath}`);
+        await this.page.addScriptTag({ path: jsPath, type: "module" });
     }
 
-    console.log(`Overlay injected successfully. Ready for picking.`);
+    console.log(`Overlay injected successfully.`);
   }
 
   /** Sends a message to the browser overlay. */

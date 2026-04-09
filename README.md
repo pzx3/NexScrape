@@ -135,7 +135,7 @@ class QuotesSpider(nex.Spider):
 nex.run(QuotesSpider, output="quotes.json")
 ```
 
-### JavaScript Browser Runtime (TypeScript)
+### JavaScript/TypeScript Library (NexScrape Browser)
 
 For interacting with highly dynamic Single Page Applications (SPAs) and executing JavaScript:
 
@@ -143,34 +143,51 @@ For interacting with highly dynamic Single Page Applications (SPAs) and executin
 import { BrowserRuntime } from "@nexscrape/browser";
 
 async function run() {
-  const browser = new BrowserRuntime({ headless: false });
+  const browser = new BrowserRuntime({ headless: true });
   const page = await browser.launch();
 
-  // Secretly catch backend JSON payloads
-  page.watch.setupInterceptor({
-    urlPattern: /api\/products/,
-    onResponse: async (res) => console.log(await res.json())
-  });
+  // 1. Visit and Extract Text
+  await page.navigate("http://localhost:3000");
+  const title = await page.evaluate(() => document.querySelector('h1')?.textContent);
+  console.log("Title:", title);
 
-  await page.visit("http://localhost:3000", "domcontentloaded");
-  
-  // Interact & Smart Waits
-  await page.interact.click("#load-more-btn");
-  await page.wait.networkIdle(500);
+  // 2. Extract Attribute (Link)
+  const link = await page.evaluate(() => document.querySelector('a.btn')?.getAttribute('href'));
+  console.log("Link:", link);
 
-  // Send fast DOM snapshot back to Rust Core
-  const html = await page.getDomSnapshot();
+  // 3. Extract Media (Image/Poster)
+  const imageUrl = await page.evaluate(() => document.querySelector('img')?.src);
+  console.log("Image:", imageUrl);
+
   await browser.close();
 }
 run();
 ```
 
-### Visual Selector Overlay (NexPicker)
+### Visual Selector Tool (NexPicker)
 
-Use the CLI to launch our built-in visual element picker to dynamically generate stable scraping selectors:
+NexPicker is a powerful visual interface to "pick" elements and generate schemas without writing code.
+
+**Key Features:**
+- 🌍 **Arabic Support** — Correctly handles connected Arabic characters in the terminal.
+- 🔗 **Structural Paths** — Generates deep, resilient CSS and XPath paths.
+- 🛡️ **Single-Tab Mode** — Forces all links to open in the same window (strips `target="_blank"`).
+- 🔄 **Persistent Injection** — Stays active across page navigations.
+
+**Launch it:**
+```bash
+# In nexscrape-picker directory
+npx tsx src/cli.ts
+```
+
+### 🧪 Test Laboratory
+
+We provide a built-in test site to verify selector accuracy and Arabic support:
 
 ```bash
-nex pick "https://example.com"
+cd test-site
+node server.js
+# Open http://localhost:3000
 ```
 
 

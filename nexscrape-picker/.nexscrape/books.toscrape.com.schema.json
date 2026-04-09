@@ -1,0 +1,108 @@
+{
+  "$schema": "https://nexscrape.dev/schema/v1",
+  "version": "1.0",
+  "page": "https://books.toscrape.com",
+  "capturedAt": "2026-04-09T07:08:18.390Z",
+  "fields": [
+    {
+      "id": "field_mnr4xy3g",
+      "name": "field_div",
+      "type": "string",
+      "repeating": true,
+      "scope": null,
+      "extraction": "text",
+      "transform": "trim",
+      "selector": {
+        "primary": {
+          "value": "div.alert",
+          "type": "css",
+          "stability": 80,
+          "matchCount": 1,
+          "readability": 80,
+          "isFallback": false
+        },
+        "fallbacks": [
+          {
+            "value": "section > div.alert",
+            "type": "css",
+            "stability": 40,
+            "matchCount": 1,
+            "readability": 70,
+            "isFallback": true
+          },
+          {
+            "value": "//body[@id='default']",
+            "type": "xpath",
+            "stability": 30,
+            "matchCount": 0,
+            "readability": 30,
+            "isFallback": true,
+            "warning": "Highly fragile structural XPath."
+          }
+        ]
+      },
+      "preview": "Warning! This is a demo website for web scraping purposes. Prices and ratings here were randomly ass",
+      "confidence": 0.6,
+      "warnings": []
+    },
+    {
+      "id": "field_mnr4y2c5",
+      "name": "field_button",
+      "type": "string",
+      "repeating": true,
+      "scope": null,
+      "extraction": "text",
+      "transform": "trim",
+      "selector": {
+        "primary": {
+          "value": "text=\"🛑 إيقاف التحديد (للتنقل)\"",
+          "type": "text",
+          "stability": 50,
+          "matchCount": 0,
+          "readability": 90,
+          "isFallback": true,
+          "warning": "Text locators break if content translation or text changes occur."
+        },
+        "fallbacks": [
+          {
+            "value": "button",
+            "type": "css",
+            "stability": 40,
+            "matchCount": 21,
+            "readability": 80,
+            "isFallback": false
+          },
+          {
+            "value": "div > button",
+            "type": "css",
+            "stability": 40,
+            "matchCount": 1,
+            "readability": 70,
+            "isFallback": true
+          },
+          {
+            "value": "//body[@id='default']",
+            "type": "xpath",
+            "stability": 30,
+            "matchCount": 0,
+            "readability": 30,
+            "isFallback": true,
+            "warning": "Highly fragile structural XPath."
+          }
+        ]
+      },
+      "preview": "🛑 إيقاف التحديد (للتنقل)",
+      "confidence": 0.5,
+      "warnings": []
+    }
+  ],
+  "pagination": {
+    "nextPage": null
+  },
+  "container": null,
+  "metadata": {
+    "browserVersion": "Chromium (Playwright)",
+    "pickerVersion": "0.1.0",
+    "pageTitle": ""
+  }
+}

@@ -64,7 +64,9 @@ export class AnalysisEngine {
           primary: selectors[0],
           fallbacks: selectors.slice(1)
         },
-        preview: info.textContent.slice(0, 100).trim(), // basic preview
+        preview: analysis.extraction === "attribute" && analysis.extractAttribute 
+          ? (info.attributes[analysis.extractAttribute] || info.textContent).slice(0, 100).trim()
+          : info.textContent.slice(0, 100).trim(),
         confidence: analysis.confidence,
         warnings: analysis.warnings
       }

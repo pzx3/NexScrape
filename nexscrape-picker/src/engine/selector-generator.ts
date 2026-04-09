@@ -80,7 +80,17 @@ export class SelectorGenerator {
       });
     }
 
-    // 7. Structural XPath (Last resort)
+    // 7. Structural CSS Path (New fallback)
+    candidates.push({
+      value: this.buildStructuralCss(element),
+      type: "css",
+      stability: 40,
+      matchCount: 0,
+      readability: 40,
+      isFallback: true
+    });
+
+    // 8. Structural XPath (Last resort)
     candidates.push({
       value: this.buildStructuralXPath(element),
       type: "xpath",
@@ -160,18 +170,49 @@ export class SelectorGenerator {
   }
 
   private buildStructuralXPath(element: ElementInfo): string {
-    const segments = [];
-    for (const seg of element.domPath) {
-        if (seg.id && !this.isGeneratedString(seg.id)) {
-            segments.unshift(`//${seg.tag}[@id='${seg.id}']`);
-            break; // Stop climbing if we hit a solid ID
-        } else {
-            segments.unshift(`${seg.tag}[${seg.index + 1}]`);
-        }
+    let segments: string[] = [];
+    const path = [...element.domPath];
+    
+    // Improved detection: If the first segment is the target tag but the last one isn't 
+    // (or vice-versa), resolve the order.
+    const isRootToLeaf = path.length > 0 && path[path.length - 1].tag === element.tag;
+    if (!isRootToLeaf && path.length > 0 && path[0].tag === element.tag) {
+        path.reverse();
     }
-    if (!segments[0].startsWith("//")) {
-        segments[0] = "//" + segments[0];
+
+    for (const seg of path) {
+      const index = seg.index + 1;
+      if (seg.id && !this.isGeneratedString(seg.id)) {
+        segments = [`//${seg.tag}[@id='${seg.id}']` ];
+      } else {
+        segments.push(`${seg.tag}[${index}]`);
+      }
     }
+    
+    if (segments.length > 0 && !segments[0].startsWith("//")) {
+      segments[0] = "//" + segments[0];
+    }
+    
     return segments.join("/");
+  }
+
+  private buildStructuralCss(element: ElementInfo): string {
+    let segments: string[] = [];
+    const path = [...element.domPath];
+    
+    const isRootToLeaf = path.length > 0 && path[path.length - 1].tag === element.tag;
+    if (!isRootToLeaf && path.length > 0 && path[0].tag === element.tag) {
+        path.reverse();
+    }
+
+    for (const seg of path) {
+      if (seg.id && !this.isGeneratedString(seg.id)) {
+        segments = [`#${seg.id}`];
+      } else {
+        const index = seg.index + 1;
+        segments.push(`${seg.tag}:nth-of-type(${index})`);
+      }
+    }
+    return segments.join(" > ");
   }
 }

@@ -3,75 +3,189 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متجر التطبيقات الحديثة (SPA)</title>
+    <title>NexScrape - مختبر اختبار الأدوات</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700&family=Noto+Kufi+Arabic:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #fdfdfd; margin: 0; padding: 20px; }
-        .header { text-align: center; margin-bottom: 30px; }
-        .product-list { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
-        .product-card { 
-            background: white; border: 1px solid #ddd; border-radius: 8px; padding: 15px; 
-            width: 250px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
-            transition: transform 0.2s;
+        :root {
+            --primary: #eb5e28;
+            --secondary: #252422;
+            --bg: #fffcf2;
+            --text: #252422;
+            --card-bg: #ffffff;
         }
-        .product-card:hover { transform: translateY(-5px); }
-        .product-title { font-size: 1.2rem; margin: 0 0 10px 0; color: #333; }
-        .product-price { font-weight: bold; color: #e63946; font-size: 1.1rem; }
-        .stock-status { font-size: 0.9rem; margin-top: 10px; }
-        .in-stock { color: #2a9d8f; }
-        .out-of-stock { color: #e76f51; }
-        #loader { display: none; margin: 20px auto; width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        button { display: block; margin: 20px auto; padding: 10px 20px; background: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 1rem; }
-        button:hover { background: #2980b9; }
+        body {
+            font-family: 'Noto Kufi Arabic', 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        header {
+            background-color: var(--secondary);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 5px solid var(--primary);
+        }
+        .container {
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        .section {
+            background: var(--card-bg);
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+        h2 {
+            color: var(--primary);
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+        .card-content {
+            padding: 15px;
+        }
+        .price {
+            font-weight: bold;
+            color: var(--primary);
+            font-size: 1.2em;
+        }
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .demo-nav {
+            background: #eee;
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .demo-nav a {
+            margin: 0 15px;
+            color: var(--secondary);
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .demo-nav a:hover {
+            color: var(--primary);
+        }
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: #888;
+        }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>متجر NexScrape التجريبي</h1>
-        <p>هذه الصفحة لا تحتوي على منتجات في الـ HTML الأصلي. يجب الضغط على الزر واستهلاك الجافاسكريبت.</p>
+<header>
+    <h1>مختبر اختبار NexScrape 🕷️</h1>
+    <p>هذه الصفحة مصممة خصيصاً لاختبار دقة التحديد (Picking) ودعم اللغة العربية.</p>
+</header>
+
+<div class="container">
+    
+    <div class="section" id="arabic-test">
+        <h2>1. اختبار اللغة العربية (RTL)</h2>
+        <p>هنا نختبر ظهور الحروف العربية المتصلة في التيرمنال:</p>
+        <h3 class="arabic-title">مرحباً بك في عالم NexScrape المتطور</h3>
+        <p class="arabic-desc">هذا النص يحتوي على <strong>كلمات عربية معقدة</strong> للتأكد من أن الأداة تقوم بإعادة التشكيل (Reshaping) والاتجاه (Bidi) بشكل صحيح.</p>
     </div>
 
-    <!-- زر تحميل الواجهة الذي سيحاكيه الـ Script -->
-    <button id="load-more-btn" onclick="fetchProducts()">تحميل أحدث المنتجات</button>
+    <div class="section" id="media-test">
+        <h2>2. اختبار الوسائط (Images & Posters)</h2>
+        <div class="grid">
+            <div class="card">
+                <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=500" alt="Tech Image" data-testid="main-image">
+                <div class="card-content">
+                    <h3>صورة ذكاء اصطناعي</h3>
+                    <p>اختبر سحب رابط الصورة من هنا.</p>
+                </div>
+            </div>
+            <div class="card">
+                <video poster="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=500" width="100%" controls>
+                    <source src="#" type="video/mp4">
+                    متصفحك لا يدعم الفيديو.
+                </video>
+                <div class="card-content">
+                    <h3>فيديو تقني</h3>
+                    <p>اختبر سحب "البوستر" (Poster) من عنصر الفيديو.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <!-- شاشة التحميل الوهمية -->
-    <div id="loader"></div>
+    <div class="section" id="repeating-test">
+        <h2>3. اختبار القوائم المتكررة (Lists)</h2>
+        <div class="grid">
+            <div class="card product-item">
+                <div class="card-content">
+                    <h3 class="item-title">منتج رقم ١</h3>
+                    <p class="price">٩٩.٩٩ ر.س</p>
+                    <a href="/product/1" class="btn">عرض التفاصيل</a>
+                </div>
+            </div>
+            <div class="card product-item">
+                <div class="card-content">
+                    <h3 class="item-title">منتج رقم ٢</h3>
+                    <p class="price">١٥٠.٠٠ ر.س</p>
+                    <a href="/product/2" class="btn">عرض التفاصيل</a>
+                </div>
+            </div>
+            <div class="card product-item">
+                <div class="card-content">
+                    <h3 class="item-title">منتج رقم ٣</h3>
+                    <p class="price">٧٥.٥٠ ر.س</p>
+                    <a href="/product/3" class="btn">عرض التفاصيل</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <!-- حاوية المنتجات الديناميكية -->
-    <div id="app-root" class="product-list"></div>
+    <div class="section">
+        <h2>4. اختبار التنقل (Navigation)</h2>
+        <p>استخدم هذه الروابط لاختبار ميزة "الحقن المستمر" (Persistent Injection) عند الانتقال لصفحة أخرى:</p>
+        <div class="demo-nav">
+            <a href="/signin.html">صفحة تسجيل الدخول</a>
+            <a href="/signup.html">صفحة التسجيل</a>
+            <a href="/">العودة للرئيسية</a>
+        </div>
+    </div>
 
-    <script>
-        // دالة تحاكي ما يفعله React / Vue بجلب البيانات ورسم الـ DOM
-        async function fetchProducts() {
-            document.getElementById('load-more-btn').style.display = 'none';
-            document.getElementById('loader').style.display = 'block';
+</div>
 
-            try {
-                const response = await fetch('/api/products');
-                const result = await response.json();
-                
-                document.getElementById('loader').style.display = 'none';
-                
-                const root = document.getElementById('app-root');
-                result.data.forEach(prod => {
-                    const statusClass = prod.inStock ? 'in-stock' : 'out-of-stock';
-                    const statusText = prod.inStock ? 'متوفر بالمخزن' : 'نفذت الكمية';
-                    
-                    const card = document.createElement('div');
-                    card.className = 'product-card item-box';
-                    card.innerHTML = `
-                        <h2 class="product-title" data-id="${prod.id}">${prod.name}</h2>
-                        <div class="product-price"> SAR ${prod.price}</div>
-                        <div class="stock-status ${statusClass}">${statusText}</div>
-                    `;
-                    root.appendChild(card);
-                });
+<footer>
+    NexScrape Picker Testing Utility &bull; 2026
+</footer>
 
-            } catch (err) {
-                console.error("Network Error: ", err);
-            }
-        }
-    </script>
 </body>
 </html>

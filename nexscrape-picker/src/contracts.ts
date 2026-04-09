@@ -227,7 +227,8 @@ export type OverlayMessage =
   | { type: "picker:toggle"; data: { enabled: boolean } }
   | { type: "picker:exit" }
   | { type: "page:ready"; data: { url: string; title: string } }
-  | { type: "scroll:position"; data: { x: number; y: number } };
+  | { type: "scroll:position"; data: { x: number; y: number } }
+  | { type: "export:save"; data: { filename: string } };
 
 /** Messages sent from the Node.js backend to the browser overlay. */
 export type BackendMessage =

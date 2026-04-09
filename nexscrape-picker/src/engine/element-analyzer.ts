@@ -44,12 +44,13 @@ export class ElementAnalyzer {
     const tagToName: Record<string, string> = {
       h1: "main_title", h2: "subtitle", h3: "sub_heading",
       img: "image_url", a: "link_url", time: "date",
+      video: "video_poster",
     };
     return tagToName[el.tag] || `field_${el.tag}`;
   }
 
   private inferType(el: ElementInfo): ElementAnalysisResult["fieldType"] {
-    if (el.tag === "img") return "image";
+    if (el.tag === "img" || el.attributes["poster"]) return "image";
     if (el.tag === "a") return "url";
     if (el.tag === "time") return "date";
     if (el.attributes["type"] === "checkbox") return "boolean";
@@ -58,7 +59,7 @@ export class ElementAnalyzer {
   }
 
   private inferExtractionStrategy(el: ElementInfo, type: string): "text" | "attribute" | "innerHTML" {
-    if (type === "image" || el.tag === "img") return "attribute";
+    if (type === "image" || el.tag === "img" || el.attributes["poster"]) return "attribute";
     if (type === "url" || el.tag === "a") return "attribute";
     return "text";
   }
@@ -66,6 +67,7 @@ export class ElementAnalyzer {
   private inferExtractionAttribute(el: ElementInfo, strategy: string): string | undefined {
     if (strategy !== "attribute") return undefined;
     if (el.tag === "img") return "src";
+    if (el.attributes["poster"]) return "poster";
     if (el.tag === "a") return "href";
     return "value";
   }
