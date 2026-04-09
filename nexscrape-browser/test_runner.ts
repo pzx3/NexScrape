@@ -1,4 +1,5 @@
-import { BrowserRuntime } from "./src/index.ts";
+import { BrowserRuntime } from "./src/index.js";
+import { Response } from "playwright";
 
 async function runDemo() {
   console.log("🚀 Starting NexScrape Browser Runtime Session...");
@@ -15,7 +16,7 @@ async function runDemo() {
     // 2. مراقبة الشبكة في وضع الصيد للحصول على معلومات دقيقة بالخلفية
     page.watch.setupInterceptor({
       urlPattern: /api/, 
-      onResponse: async (res) => {
+      onResponse: async (res: Response) => {
           if(res.status() === 200 && res.request().method() === "GET") {
               console.log(`[NETWORK SPY] Intercepted Data from: ${res.url()}`);
           }

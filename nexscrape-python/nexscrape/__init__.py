@@ -32,7 +32,6 @@ __all__ = [
     "ProxyPool",
     "RateLimit",
     "fetch",
-    "chain",
     "run",
 ]
 
@@ -54,17 +53,17 @@ def fetch(url: str, **kwargs) -> "Response":
     raise NotImplementedError("Rust bindings not yet compiled. Use `maturin develop` to build.")
 
 
-def chain(url: str) -> "ChainBuilder":
-    """Start a fluent chain for quick scraping.
-
-    Args:
-        url: Starting URL.
-
-    Returns:
-        ChainBuilder for method chaining.
-    """
-    from .chain import ChainBuilder
-    return ChainBuilder(url)
+# def chain(url: str) -> "ChainBuilder":
+#     """Start a fluent chain for quick scraping.
+# 
+#     Args:
+#         url: Starting URL.
+# 
+#     Returns:
+#         ChainBuilder for method chaining.
+#     """
+#     # from .chain import ChainBuilder
+#     # return ChainBuilder(url)
 
 
 def run(spider_class, output: str = None, **kwargs):
