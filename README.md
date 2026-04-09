@@ -147,16 +147,16 @@ async function run() {
   const page = await browser.launch();
 
   // 1. Visit and Extract Text
-  await page.navigate("http://localhost:3000");
-  const title = await page.evaluate(() => document.querySelector('h1')?.textContent);
+  await page.visit("http://localhost:3000");
+  const title = await page.runScript(() => document.querySelector('h1')?.textContent);
   console.log("Title:", title);
 
   // 2. Extract Attribute (Link)
-  const link = await page.evaluate(() => document.querySelector('a.btn')?.getAttribute('href'));
+  const link = await page.runScript(() => document.querySelector('a.btn')?.getAttribute('href'));
   console.log("Link:", link);
 
   // 3. Extract Media (Image/Poster)
-  const imageUrl = await page.evaluate(() => document.querySelector('img')?.src);
+  const imageUrl = await page.runScript(() => document.querySelector('img')?.src);
   console.log("Image:", imageUrl);
 
   await browser.close();

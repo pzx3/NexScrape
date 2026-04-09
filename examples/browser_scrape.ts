@@ -19,12 +19,14 @@ async function run() {
 
     // 2. Navigate to the test site
     console.log("🌐 Navigating to test site...");
-    await page.navigate("http://localhost:3000");
+    await page.visit("http://localhost:3000");
 
-    // 3. Extract data using page.evaluate (Universal & Powerful)
-    const data = await page.evaluate(() => {
+    // 3. Extract data using runScript (Universal & Powerful)
+    const data = await page.runScript(() => {
       const title = document.querySelector('h1')?.textContent?.trim();
-      const products = Array.from(document.querySelectorAll('.product-item')).map(el => ({
+      const productElements = document.querySelectorAll('.product-item');
+      
+      const products = Array.from(productElements).map(el => ({
         name: el.querySelector('.item-title')?.textContent?.trim(),
         price: el.querySelector('.price')?.textContent?.trim(),
         link: el.querySelector('a')?.getAttribute('href')
@@ -37,7 +39,7 @@ async function run() {
     console.log("-------------------");
     console.log(`Page Title: ${data.title}`);
     console.log(`Found ${data.products.length} products:`);
-    data.products.forEach((p, i) => {
+    data.products.forEach((p: any, i: number) => {
         console.log(`  ${i+1}. ${p.name} - ${p.price}`);
     });
 
